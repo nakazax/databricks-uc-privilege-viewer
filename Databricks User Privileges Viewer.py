@@ -1,10 +1,12 @@
 # Databricks notebook source
 # MAGIC %md
 # MAGIC # Databricks User Privileges Viewer
-# MAGIC This notebook views the privileges of a specific user in Databricks Unity Catalog. It performs the following tasks:
+# MAGIC This notebook views the privileges and ownership of a specific user in Databricks Unity Catalog. It performs the following tasks:
 # MAGIC
 # MAGIC 1. Retrieves user information based on their email address
 # MAGIC 2. Identifies the groups the user belongs to (directly or indirectly)
+# MAGIC 3. Lists the objects owned by the user or their groups
+# MAGIC 4. Lists the privileges granted to the user or their groups
 # MAGIC
 # MAGIC ## Prerequisites:
 # MAGIC - Databricks account with appropriate access
@@ -21,6 +23,7 @@
 
 # MAGIC %md
 # MAGIC ## Pre-processing
+# MAGIC This section installs necessary packages, imports libraries, and sets up configurations.
 
 # COMMAND ----------
 
@@ -146,6 +149,7 @@ def print_fancy_header(text):
 
 # MAGIC %md
 # MAGIC ## Get User Groups
+# MAGIC This section retrieves user information and identifies the groups the user belongs to.
 
 # COMMAND ----------
 
@@ -176,10 +180,11 @@ display(user_groups_df)
 
 # MAGIC %md
 # MAGIC ## List User Privileges
+# MAGIC This section queries and displays the objects owned by the user or their groups, as well as the privileges granted to them.
 
 # COMMAND ----------
 
-# Define securable object types and their corresponding tables
+# DBTITLE 1,Define Securable Objects
 securable_objects = [
     {"name": "Metastore", "owner_table": "metastores", "owner_column": "metastore_owner", "privilege_table": "metastore_privileges"},
     {"name": "Catalog", "owner_table": "catalogs", "owner_column": "catalog_owner", "privilege_table": "catalog_privileges"},
@@ -194,6 +199,7 @@ securable_objects = [
 
 # COMMAND ----------
 
+# DBTITLE 1,Query and Display Privileges
 # Prepare grantees
 grantees = [user_email] + user_groups_dict
 grantees_str = ", ".join(f"'{grantee}'" for grantee in grantees)
