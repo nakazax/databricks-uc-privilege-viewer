@@ -10,7 +10,7 @@
 # MAGIC
 # MAGIC ## Prerequisites:
 # MAGIC - Databricks account with appropriate access
-# MAGIC - Account ID, client ID, and client secret for authentication
+# MAGIC - Account ID, client ID, and client secret for authentication (stored in a secret scope)
 # MAGIC
 # MAGIC ## Usage:
 # MAGIC 1. Fill in the required parameters in the widgets
@@ -57,10 +57,6 @@ def get_user_by_email(client: AccountClient, email: str) -> Dict[str, Any]:
 
     Raises:
         ValueError: If no user is found with the provided email address.
-
-    Example:
-        client = AccountClient(...)
-        user_info = get_user_by_email(client, "user@example.com")
     """
     users: List[User] = client.users.list(filter=f"emails.value eq '{email}'")
     for user in users:
@@ -81,11 +77,6 @@ def get_user_groups(client: AccountClient, user: Dict[str, Any]) -> List[str]:
 
     Returns:
         List[str]: A list of group display names that the user belongs to.
-
-    Example:
-        client = AccountClient(...)
-        user_info = get_user_by_email(client, "user@example.com")
-        user_groups = get_user_groups(client, user_info)
     """
     user_id = user['id']
     groups: List[Group] = client.groups.list()
@@ -148,7 +139,7 @@ user_email = dbutils.widgets.get("user_email")
 secret_scope_name = dbutils.widgets.get("secret_scope_name")
 
 if not user_email or not secret_scope_name:
-    raise Exception("Please set the user email and/or secret scope name")
+    raise ValueError("Please set both the user email and secret scope name")
 
 # COMMAND ----------
 
@@ -157,8 +148,8 @@ try:
     account_id = dbutils.secrets.get(scope=secret_scope_name, key=ACCOUNT_ID_KEY)
     client_id = dbutils.secrets.get(scope=secret_scope_name, key=CLIENT_ID_KEY)
     client_secret = dbutils.secrets.get(scope=secret_scope_name, key=CLIENT_SECRET_KEY)
-except:
-    raise Exception("Please set the secrets for the account and the client")
+except Exception as e:
+    raise ValueError(f"Failed to retrieve secrets: {str(e)}")
 
 # COMMAND ----------
 
@@ -180,15 +171,15 @@ a = AccountClient(
 
 # DBTITLE 1,Get User by Email
 user_dict = get_user_by_email(a, user_email)
-print("User details")
+print("User details:")
 display(user_dict)
 
 # COMMAND ----------
 
 # DBTITLE 1,Get User Groups
-user_groups_dict = get_user_groups(a, user_dict)
-user_groups_df = spark.createDataFrame([(group,) for group in user_groups_dict], ["group_name"])
-print("List of account groups to which the user directly or indirectly belongs")
+user_groups = get_user_groups(a, user_dict)
+user_groups_df = spark.createDataFrame([(group,) for group in user_groups], ["group_name"])
+print("List of account groups to which the user directly or indirectly belongs:")
 display(user_groups_df)
 
 # COMMAND ----------
@@ -216,7 +207,7 @@ securable_objects = [
 
 # DBTITLE 1,Query and Display Privileges
 # Prepare grantees
-grantees = [user_email] + user_groups_dict
+grantees = [user_email] + user_groups
 grantees_str = ", ".join(f"'{grantee}'" for grantee in grantees)
 
 print_fancy_header(f"Access Rights for {user_email}")
