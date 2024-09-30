@@ -1,23 +1,33 @@
 # Databricks notebook source
 # MAGIC %md
 # MAGIC # Databricks User Privileges Viewer
-# MAGIC This notebook views the privileges and ownership of a specific user in Databricks Unity Catalog. It performs the following tasks:
+# MAGIC This notebook views the privileges and ownership of a specific user in Databricks Unity Catalog.
 # MAGIC
-# MAGIC 1. Retrieves user information based on their email address
-# MAGIC 2. Identifies the groups the user belongs to (directly or indirectly)
-# MAGIC 3. Lists the objects owned by the user or their groups
-# MAGIC 4. Lists the privileges granted to the user or their groups
+# MAGIC ## Purpose:
+# MAGIC - Retrieve user information based on their email address
+# MAGIC - Identify groups the user belongs to (directly or indirectly)
+# MAGIC - List objects owned by the user or their groups
+# MAGIC - List privileges granted to the user or their groups
 # MAGIC
 # MAGIC ## Prerequisites:
-# MAGIC - Databricks account with appropriate access
-# MAGIC - Account ID, client ID, and client secret for authentication (stored in a secret scope)
+# MAGIC 1. **Secret scope with registered account ID, client ID, and client secret:**
+# MAGIC    - Use the `databricks_sp_secret_manager` notebook to register these secrets.
+# MAGIC
+# MAGIC 2. **The user executing this notebook must have access to the secret scope:**
+# MAGIC    - Ensure you have the necessary permissions to read from the secret scope.
+# MAGIC
+# MAGIC 3. **The user executing this notebook must have SELECT privilege on system.information_schema tables:**
+# MAGIC    - This is required to query user privileges and ownerships.
 # MAGIC
 # MAGIC ## Usage:
-# MAGIC 1. Fill in the required parameters in the widgets
-# MAGIC 2. Run the notebook cells sequentially
-# MAGIC 3. View the results displayed after each major step
+# MAGIC 1. **Register secrets:**
+# MAGIC    - Run the `databricks_sp_secret_manager` notebook to register account ID, client ID, and client secret in a secret scope.
 # MAGIC
-# MAGIC Note: This notebook uses the Databricks SDK and requires authentication with a service principal.
+# MAGIC 2. **Run this notebook:**
+# MAGIC    - Execute all cells up to and including the "Define Widgets" cell.
+# MAGIC    - In the widgets, enter the email of the user whose privileges you want to view.
+# MAGIC    - The Secret Scope Name can be left as default unless you want to change it.
+# MAGIC    - Run the remaining cells in order.
 
 # COMMAND ----------
 
