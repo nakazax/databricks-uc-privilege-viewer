@@ -103,3 +103,20 @@ for key, value in secrets:
         print(f"Secret '{key}' put successfully.")
     except Exception as e:
         print(f"Error putting secret '{key}': {str(e)}")
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Cleanup (Optional)
+# MAGIC This cell is for cleaning up the created secret scope. It is commented out by default for safety reasons. Uncomment and run only when you want to remove the entire secret scope and all its associated secrets.
+
+# COMMAND ----------
+
+# DBTITLE 1,Delete Secret Scope
+# from databricks.sdk import WorkspaceClient
+# w = WorkspaceClient()
+# try:
+#     w.secrets.delete_scope(scope=secret_scope_name)
+#     print(f"Secret scope '{secret_scope_name}' and all its secrets deleted successfully.")
+# except Exception as e:
+#     print(f"Error deleting secret scope: {str(e)}")
