@@ -25,18 +25,18 @@
 # MAGIC ### 2. Obtain Service Principal Client ID and Client Secret
 # MAGIC If you already have a client ID and client secret, use those. If not, follow the steps below.
 # MAGIC
-# MAGIC - Go to [User management] in the account console.
+# MAGIC - Go to [**User management**] in the account console.
 # MAGIC - Access the service principal you want to use (or create a new one).
 # MAGIC - Ensure the service principal has the Account Admin role.
-# MAGIC - In the [Principal information] section, find the [OAuth secrets] area.
-# MAGIC - Click [Generate secret] to get the client ID and client secret.
+# MAGIC - In the [**Principal information**] section, find the [**OAuth secrets**] area.
+# MAGIC - Click [**Generate secret**] to get the client ID and client secret.
 # MAGIC
 # MAGIC <img src="./images/account_console_2.png" alt="Generate Secret" width="1000"/>
 # MAGIC
 # MAGIC ### 3. Run the Notebook
-# MAGIC - Execute all cells up to and including the [Define Widgets] cell.
-# MAGIC - In the widgets, enter the Account ID, Client ID, and Client Secret.
-# MAGIC - The Secret Scope Name can be left as default unless you want to change it.
+# MAGIC - Execute all cells up to and including the [**Define Widgets**] cell.
+# MAGIC - In the widgets, enter the `account_id`, `client_id`, and `client_secret`.
+# MAGIC - The `secret_scope_name` can be left as default unless you want to change it.
 # MAGIC - Run the remaining cells in order.
 
 # COMMAND ----------

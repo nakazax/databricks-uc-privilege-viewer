@@ -11,22 +11,22 @@
 # MAGIC
 # MAGIC ## Prerequisites:
 # MAGIC 1. **Secret scope with registered account ID, client ID, and client secret:**
-# MAGIC    - Use the `databricks_sp_secret_manager` notebook to register these secrets.
+# MAGIC    - Use the <a href="$./databricks_sp_secret_manager" target="_blank">databricks_sp_secret_manager</a> notebook to register these secrets.
 # MAGIC
 # MAGIC 2. **The user executing this notebook must have access to the secret scope:**
 # MAGIC    - Ensure you have the necessary permissions to read from the secret scope.
 # MAGIC
-# MAGIC 3. **The user executing this notebook must have SELECT privilege on system.information_schema tables:**
+# MAGIC 3. **The user executing this notebook must have SELECT privilege on `system.information_schema` tables:**
 # MAGIC    - This is required to query user privileges and ownerships.
 # MAGIC
 # MAGIC ## Usage:
 # MAGIC 1. **Register secrets:**
-# MAGIC    - Run the `databricks_sp_secret_manager` notebook to register account ID, client ID, and client secret in a secret scope.
+# MAGIC    - Run the <a href="$./databricks_sp_secret_manager" target="_blank">databricks_sp_secret_manager</a> notebook to register account ID, client ID, and client secret in a secret scope.
 # MAGIC
 # MAGIC 2. **Run this notebook:**
-# MAGIC    - Execute all cells up to and including the "Define Widgets" cell.
-# MAGIC    - In the widgets, enter the email of the user whose privileges you want to view.
-# MAGIC    - The Secret Scope Name can be left as default unless you want to change it.
+# MAGIC    - Execute all cells up to and including the [**Define Widgets**] cell.
+# MAGIC    - In the widgets, enter the `user_email` of the user whose privileges you want to view.
+# MAGIC    - The `secret_scope_name` can be left as default unless you want to change it.
 # MAGIC    - Run the remaining cells in order.
 
 # COMMAND ----------
