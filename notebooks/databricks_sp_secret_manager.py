@@ -8,15 +8,36 @@
 # MAGIC - Store account ID, client ID, and client secret for an account-level service principal
 # MAGIC
 # MAGIC ## Prerequisites:
-# MAGIC - Databricks workspace access with admin privileges
-# MAGIC - Account ID, client ID, and client secret for the service principal
+# MAGIC 1. **The user executing this notebook must have the Databricks Account Admin role:**
+# MAGIC    - This role is necessary to access and manage account-level resources and settings.
+# MAGIC
+# MAGIC 2. **The service principal for which secrets are being registered must have the Account Admin role:**
+# MAGIC    - While not strictly necessary for this notebook, the Account Admin role will be required for subsequent notebooks using these credentials.
 # MAGIC
 # MAGIC ## Usage:
-# MAGIC 1. Fill in the widget parameters (account ID, client ID, client secret, and scope name)
-# MAGIC 2. Run all cells
-# MAGIC 3. Use created secrets in other notebooks for Account API authentication
+# MAGIC ### 1. Obtain Account ID
+# MAGIC - Access the account console. [[AWS](https://accounts.cloud.databricks.com) | [Azure](https://accounts.azuredatabricks.net/) | [Google Cloud](https://accounts.gcp.databricks.com/)]
+# MAGIC - Click on the icon in the top right corner of the screen.
+# MAGIC - Copy the Account ID and keep it handy.
 # MAGIC
-# MAGIC **Note:** Run this notebook as an administrator. Keep all credentials secure.
+# MAGIC <img src="./images/account_console_1.png" alt="Account ID Location" width="1000"/>
+# MAGIC
+# MAGIC ### 2. Obtain Service Principal Client ID and Client Secret
+# MAGIC If you already have a client ID and client secret, use those. If not, follow the steps below.
+# MAGIC
+# MAGIC - Go to [User management] in the account console.
+# MAGIC - Access the service principal you want to use (or create a new one).
+# MAGIC - Ensure the service principal has the Account Admin role.
+# MAGIC - In the [Principal information] section, find the [OAuth secrets] area.
+# MAGIC - Click [Generate secret] to get the client ID and client secret.
+# MAGIC
+# MAGIC <img src="./images/account_console_2.png" alt="Generate Secret" width="1000"/>
+# MAGIC
+# MAGIC ### 3. Run the Notebook
+# MAGIC - Execute all cells up to and including the [Define Widgets] cell.
+# MAGIC - In the widgets, enter the Account ID, Client ID, and Client Secret.
+# MAGIC - The Secret Scope Name can be left as default unless you want to change it.
+# MAGIC - Run the remaining cells in order.
 
 # COMMAND ----------
 
