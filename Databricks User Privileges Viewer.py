@@ -160,87 +160,69 @@ a = AccountClient(
 # COMMAND ----------
 
 # DBTITLE 1,Get User by Email
-user = get_user_by_email(a, user_email)
+user_dict = get_user_by_email(a, user_email)
 print("User details")
-display(user)
+display(user_dict)
 
 # COMMAND ----------
 
 # DBTITLE 1,Get User Groups
-user_groups = get_user_groups(a, user)
+user_groups_dict = get_user_groups(a, user_dict)
+user_groups_df = spark.createDataFrame([(group,) for group in user_groups_dict], ["group_name"])
 print("List of account groups to which the user directly or indirectly belongs")
-display(user_groups)
+display(user_groups_df)
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## List Privileges
+# MAGIC ## List User Privileges
 
 # COMMAND ----------
 
-# DBTITLE 1,Define Privilege Tables
-privilege_tables = [
-    "metastore_privileges",
-    "catalog_privileges",
-    "schema_privileges",
-    "table_privileges",
-    "volume_privileges",
-    "routine_privileges",
-    "storage_credential_privileges",
-    "external_location_privileges",
-    "connection_privileges",
+# Define securable object types and their corresponding tables
+securable_objects = [
+    {"name": "Metastore", "owner_table": "metastores", "owner_column": "metastore_owner", "privilege_table": "metastore_privileges"},
+    {"name": "Catalog", "owner_table": "catalogs", "owner_column": "catalog_owner", "privilege_table": "catalog_privileges"},
+    {"name": "Schema", "owner_table": "schemata", "owner_column": "schema_owner", "privilege_table": "schema_privileges"},
+    {"name": "Table", "owner_table": "tables", "owner_column": "table_owner", "privilege_table": "table_privileges"},
+    {"name": "Volume", "owner_table": "volumes", "owner_column": "volume_owner", "privilege_table": "volume_privileges"},
+    {"name": "Routine", "owner_table": "routines", "owner_column": "routine_owner", "privilege_table": "routine_privileges"},
+    {"name": "Storage Credential", "owner_table": "storage_credentials", "owner_column": "storage_credential_owner", "privilege_table": "storage_credential_privileges"},
+    {"name": "External Location", "owner_table": "external_locations", "owner_column": "external_location_owner", "privilege_table": "external_location_privileges"},
+    {"name": "Connection", "owner_table": "connections", "owner_column": "connection_owner", "privilege_table": "connection_privileges"}
 ]
 
 # COMMAND ----------
 
-# DBTITLE 1,Prepare Grantees
-grantees = [user_email] + user_groups
+# Prepare grantees
+grantees = [user_email] + user_groups_dict
 grantees_str = ", ".join(f"'{grantee}'" for grantee in grantees)
 
-# COMMAND ----------
+print_fancy_header(f"Access Rights for {user_email}")
+print("List of account groups to which the user directly or indirectly belongs:")
+display(user_groups_df)
 
-# DBTITLE 1,List Privileges for User and User Groups
-print_fancy_header(f"Grantees")
-display(grantees)
-
-for privilege_table in privilege_tables:
-    query = f"""
+for obj in securable_objects:
+    print_fancy_header(f"{obj['name']} Access Rights")
+    
+    # Query ownership
+    owner_query = f"""
     SELECT *
-    FROM system.information_schema.{privilege_table}
+    FROM system.information_schema.{obj['owner_table']}
+    WHERE {obj['owner_column']} IN ({grantees_str})
+    """
+    owner_df = spark.sql(owner_query)
+    
+    # Query privileges
+    privilege_query = f"""
+    SELECT *
+    FROM system.information_schema.{obj['privilege_table']}
     WHERE grantee IN ({grantees_str})
     """
-    result_df = spark.sql(query)
-    print_fancy_header(f"Privileges from {privilege_table}")
-    display(result_df)
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ## List Owners
-
-# COMMAND ----------
-
-# DBTITLE 1,Define Securable Object Tables
-securable_object_tables = {
-    "metastores": "metastore_owner",
-    "catalogs": "catalog_owner",
-    "schemata": "schema_owner",
-    "tables": "table_owner",
-    "volumes": "volume_owner",
-    "routines": "routine_owner",
-    "storage_credentials": "storage_credential_owner",
-    "external_locations": "external_location_owner",
-    "connections": "connection_owner"
-}
-
-# COMMAND ----------
-
-for table, owner_column in securable_object_tables.items():
-    query = f"""
-    SELECT *
-    FROM system.information_schema.{table}
-    WHERE {owner_column} IN ({grantees_str})
-    """
-    result_df = spark.sql(query)
-    print_fancy_header(f"{table.capitalize()} owned by user")
-    display(result_df)
+    privilege_df = spark.sql(privilege_query)
+    
+    print(f"\n{obj['name']}s that the specified user or their groups own:")
+    display(owner_df)
+    
+    print(f"\n{obj['name']}s that the specified user or their groups have privileges for:")
+    display(privilege_df)
