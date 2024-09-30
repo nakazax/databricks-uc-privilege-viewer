@@ -7,6 +7,10 @@
 # MAGIC - Create a secret scope
 # MAGIC - Store account ID, client ID, and client secret for an account-level service principal
 # MAGIC
+# MAGIC ## Prerequisites:
+# MAGIC - Databricks workspace access with admin privileges
+# MAGIC - Account ID, client ID, and client secret for the service principal
+# MAGIC
 # MAGIC ## Usage:
 # MAGIC 1. Fill in the widget parameters (account ID, client ID, client secret, and scope name)
 # MAGIC 2. Run all cells
@@ -31,7 +35,6 @@
 # DBTITLE 1,Import Libraries
 import logging
 logging.basicConfig(level=logging.INFO)
-
 from databricks.sdk import WorkspaceClient
 
 # COMMAND ----------
@@ -61,6 +64,9 @@ account_id = dbutils.widgets.get("account_id")
 client_id = dbutils.widgets.get("client_id")
 client_secret = dbutils.widgets.get("client_secret")
 
+if not all([secret_scope_name, account_id, client_id, client_secret]):
+    raise ValueError("Please provide values for all widget parameters")
+
 # COMMAND ----------
 
 # MAGIC %md
@@ -75,23 +81,25 @@ w = WorkspaceClient()
 # COMMAND ----------
 
 # DBTITLE 1,Create Secret Scope
-w.secrets.create_scope(scope=secret_scope_name)
-print(f"Secret scope '{secret_scope_name}' created successfully.")
+try:
+    w.secrets.create_scope(scope=secret_scope_name)
+    print(f"Secret scope '{secret_scope_name}' created successfully.")
+except Exception as e:
+    print(f"Error creating secret scope: {str(e)}")
+    print("Proceeding with existing scope or creation of secrets.")
 
 # COMMAND ----------
 
-# DBTITLE 1,Put Secret for Account ID
-w.secrets.put_secret(scope=secret_scope_name, key=ACCOUNT_ID_KEY, string_value=account_id)
-print(f"Secret '{ACCOUNT_ID_KEY}' put successfully.")
+# DBTITLE 1,Put Secrets
+secrets = [
+    (ACCOUNT_ID_KEY, account_id),
+    (CLIENT_ID_KEY, client_id),
+    (CLIENT_SECRET_KEY, client_secret)
+]
 
-# COMMAND ----------
-
-# DBTITLE 1,Put Secret for Client ID
-w.secrets.put_secret(scope=secret_scope_name, key=CLIENT_ID_KEY, string_value=client_id)
-print(f"Secret '{CLIENT_ID_KEY}' put successfully.")
-
-# COMMAND ----------
-
-# DBTITLE 1,Put Secret for Client Secret
-w.secrets.put_secret(scope=secret_scope_name, key=CLIENT_SECRET_KEY, string_value=client_secret)
-print(f"Secret '{CLIENT_SECRET_KEY}' put successfully.")
+for key, value in secrets:
+    try:
+        w.secrets.put_secret(scope=secret_scope_name, key=key, string_value=value)
+        print(f"Secret '{key}' put successfully.")
+    except Exception as e:
+        print(f"Error putting secret '{key}': {str(e)}")
