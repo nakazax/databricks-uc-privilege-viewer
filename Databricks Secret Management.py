@@ -9,7 +9,8 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Install and Import Libraries
+# MAGIC ## Setup Environment
+# MAGIC Install required packages and import necessary libraries for secret management.
 
 # COMMAND ----------
 
@@ -28,7 +29,8 @@ from databricks.sdk import WorkspaceClient
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Configurations
+# MAGIC ## Configure Parameters
+# MAGIC Define and retrieve parameters for secret scope and keys using widgets.
 
 # COMMAND ----------
 
@@ -53,7 +55,8 @@ client_secret_value = dbutils.widgets.get("client_secret_value")
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Main
+# MAGIC ## Manage Secrets
+# MAGIC Create a secret scope and set up secrets using the Databricks Workspace API.
 
 # COMMAND ----------
 
@@ -91,11 +94,8 @@ except Exception as e:
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Cleanup
-# MAGIC
-# MAGIC Uncomment and run the following cell if you need to delete the secrets and scope.
-# MAGIC
-# MAGIC **Warning:** This will permanently delete the secrets and scope. Use with caution.
+# MAGIC ## Cleanup (Optional)
+# MAGIC Instructions for removing the created secrets and scope if needed.
 
 # COMMAND ----------
 
