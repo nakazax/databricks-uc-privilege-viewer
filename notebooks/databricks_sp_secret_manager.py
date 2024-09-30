@@ -5,10 +5,10 @@
 # MAGIC
 # MAGIC ## Purpose:
 # MAGIC - Create a secret scope
-# MAGIC - Store client ID and client secret for an account-level service principal
+# MAGIC - Store account ID, client ID, and client secret for an account-level service principal
 # MAGIC
 # MAGIC ## Usage:
-# MAGIC 1. Fill in the widget parameters
+# MAGIC 1. Fill in the widget parameters (account ID, client ID, client secret, and scope name)
 # MAGIC 2. Run all cells
 # MAGIC 3. Use created secrets in other notebooks for Account API authentication
 # MAGIC
@@ -36,6 +36,11 @@ from databricks.sdk import WorkspaceClient
 
 # COMMAND ----------
 
+# DBTITLE 1,Import Constants
+# MAGIC %run ./consts
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## Configure Parameters
 # MAGIC Define and retrieve parameters for secret scope and keys using widgets.
@@ -43,7 +48,7 @@ from databricks.sdk import WorkspaceClient
 # COMMAND ----------
 
 # DBTITLE 1,Define Widgets
-dbutils.widgets.text("secret_scope_name", "user_privileges_viewer_scope", "Secret Scope Name")
+dbutils.widgets.text("secret_scope_name", DEFAULT_SECRET_SCOPE_NAME, "Secret Scope Name")
 dbutils.widgets.text("account_id", "", "Account ID")
 dbutils.widgets.text("client_id", "", "Client ID")
 dbutils.widgets.text("client_secret", "", "Client Secret")
@@ -55,13 +60,6 @@ secret_scope_name = dbutils.widgets.get("secret_scope_name")
 account_id = dbutils.widgets.get("account_id")
 client_id = dbutils.widgets.get("client_id")
 client_secret = dbutils.widgets.get("client_secret")
-
-# COMMAND ----------
-
-# DBTITLE 1,Define Constants
-ACCOUNT_ID_KEY = "account_id"
-CLIENT_ID_KEY = "client_id"
-CLIENT_SECRET_KEY = "client_secret"
 
 # COMMAND ----------
 

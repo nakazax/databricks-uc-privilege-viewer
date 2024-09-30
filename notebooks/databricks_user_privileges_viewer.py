@@ -43,21 +43,6 @@ from databricks.sdk.service.iam import User, Group
 
 # COMMAND ----------
 
-# DBTITLE 1,Configurations
-# Widget definitions
-dbutils.widgets.text("email", "", "User Email")
-dbutils.widgets.text("account_id", "", "Account ID")
-dbutils.widgets.text("client_id", "", "Client ID")
-dbutils.widgets.text("client_secret", "", "Client Secret")
-
-# Get widget values
-user_email = dbutils.widgets.get("email")
-account_id = dbutils.widgets.get("account_id")
-client_id = dbutils.widgets.get("client_id")
-client_secret = dbutils.widgets.get("client_secret")
-
-# COMMAND ----------
-
 # DBTITLE 1,Define Helper Functions
 def get_user_by_email(client: AccountClient, email: str) -> Dict[str, Any]:
     """
@@ -144,6 +129,36 @@ def print_fancy_header(text):
     print("\n" + "=" * width)
     print("|" + " " * padding + text + " " * padding + "|")
     print("=" * width)
+
+# COMMAND ----------
+
+# DBTITLE 1,Import Constants
+# MAGIC %run ./consts
+
+# COMMAND ----------
+
+# DBTITLE 1,Define Widgets
+dbutils.widgets.text("user_email", "", "User Email")
+dbutils.widgets.text("secret_scope_name", DEFAULT_SECRET_SCOPE_NAME, "Secret Scope Name")
+
+# COMMAND ----------
+
+# DBTITLE 1,Get Widget Values
+user_email = dbutils.widgets.get("user_email")
+secret_scope_name = dbutils.widgets.get("secret_scope_name")
+
+if not user_email or not secret_scope_name:
+    raise Exception("Please set the user email and/or secret scope name")
+
+# COMMAND ----------
+
+# DBTITLE 1,Get Account Info from Secret
+try:
+    account_id = dbutils.secrets.get(scope=secret_scope_name, key=ACCOUNT_ID_KEY)
+    client_id = dbutils.secrets.get(scope=secret_scope_name, key=CLIENT_ID_KEY)
+    client_secret = dbutils.secrets.get(scope=secret_scope_name, key=CLIENT_SECRET_KEY)
+except:
+    raise Exception("Please set the secrets for the account and the client")
 
 # COMMAND ----------
 
