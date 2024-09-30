@@ -1,9 +1,24 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Databricks Secret Management for User Privileges Viewer
-# MAGIC This notebook creates a secret scope and sets up the necessary secrets for the User Privileges Viewer notebook.
+# MAGIC # Databricks Account-Level Service Principal Secret Manager
 # MAGIC
-# MAGIC **Note:** This notebook should be run by an administrator with the necessary permissions to create secret scopes and manage secrets.
+# MAGIC This notebook creates a secret scope and sets up the necessary secrets for account-level service principal authentication. It's designed to be used in conjunction with other notebooks or applications that require secure access to Databricks Account APIs.
+# MAGIC
+# MAGIC ## Purpose:
+# MAGIC - Create a secret scope
+# MAGIC - Store client ID and client secret for an account-level service principal
+# MAGIC - Provide a secure way to manage and access these credentials
+# MAGIC
+# MAGIC ## Important Note:
+# MAGIC This notebook should be run by an administrator with the necessary permissions to create secret scopes and manage secrets. Ensure that access to this notebook is strictly controlled.
+# MAGIC
+# MAGIC ## Usage:
+# MAGIC 1. Fill in the required parameters using the provided widgets
+# MAGIC 2. Run the notebook cells sequentially
+# MAGIC 3. Use the created secrets in other notebooks or applications for secure authentication with Databricks Account APIs
+# MAGIC
+# MAGIC ## Security Warning:
+# MAGIC Never share or expose the values of your client ID or client secret. Always use secure methods (like this notebook) to manage these credentials.
 
 # COMMAND ----------
 
