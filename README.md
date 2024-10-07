@@ -1,7 +1,7 @@
-# Databricks UC Privilege Viewer
+# Databricks Unity Catalog Privilege Viewer
 
 ## Overview
-The Databricks UC Privilege Viewer is a tool designed to simplify the process of viewing and managing user permissions in Databricks Unity Catalog. This notebook-based solution allows administrators to quickly retrieve and display a comprehensive list of privileges for a specific user, including permissions inherited from group memberships.
+The Databricks Unity Catalog Privilege Viewer is a tool designed to simplify the process of viewing and managing user permissions in Databricks Unity Catalog. This notebook-based solution allows administrators to quickly retrieve and display a comprehensive list of privileges for a specific user, including permissions inherited from group memberships.
 
 ## Features
 - Retrieve user information based on email address
