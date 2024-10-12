@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Databricks User Privileges Viewer
+# MAGIC # Databricks Unity Catalog Privilege Viewer
 # MAGIC This notebook views the privileges and ownership of a specific user in Databricks Unity Catalog.
 # MAGIC
 # MAGIC ## Purpose:
